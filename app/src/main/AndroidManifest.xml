@@ -26,6 +26,12 @@
 
         <activity android:name="com.winlator.MainActivity"
             android:theme="@style/AppThemeDark"
+            android:exported="false"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|density|navigation" />
+
+        <activity android:name="com.winlator.NfsLauncherActivity"
+            android:theme="@style/AppThemeDark"
             android:exported="true"
             android:screenOrientation="sensor"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|density|navigation">
