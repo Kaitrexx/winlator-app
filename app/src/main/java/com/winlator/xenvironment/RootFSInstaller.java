@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winlator.MainActivity;
 import com.winlator.R;
 import com.winlator.SettingsFragment;
 import com.winlator.container.Container;
