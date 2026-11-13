@@ -17,19 +17,6 @@ jobs:
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;24.0.8215888" "cmake;3.22.1"
       - uses: gradle/actions/setup-gradle@v4
-      - name: Trim rootfs
-        run: |
-          F=$(find app -name rootfs.tzst | head -n 1)
-          echo "Fayl: $F"
-          ls -l "$F"
-          command -v zstd || sudo apt-get install -y zstd
-          mkdir /tmp/rfs
-          sudo tar --zstd -xpf "$F" -C /tmp/rfs --numeric-owner
-          test -d /tmp/rfs/usr/share/i18n
-          sudo rm -rf /tmp/rfs/usr/share/i18n
-          sudo tar -C /tmp/rfs --numeric-owner -cf - . | zstd -19 -T0 -q -o /tmp/rootfs_new.tzst
-          sudo cp /tmp/rootfs_new.tzst "$F"
-          ls -l "$F"
       - name: Build
         run: |
           if [ -f ./gradlew ]; then chmod +x ./gradlew; ./gradlew assembleDebug --stacktrace; else gradle assembleDebug --stacktrace; fi
