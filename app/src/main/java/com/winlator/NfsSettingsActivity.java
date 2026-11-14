@@ -29,6 +29,9 @@ public class NfsSettingsActivity extends AppCompatActivity {
     public static final String PREF_HUD_MODE = "nfs_hud_mode";
     public static final String PREF_FULLSCREEN = "nfs_fullscreen";
     public static final String DEFAULT_SCREEN_SIZE = "640x480";
+    public static final String PREF_GPU_DRIVER = "nfs_gpu_driver"; // NFS_GPU_V1
+    private static final String[] GPU_LABELS = {"Avtomatik", "Turnip (yalnız Snapdragon/Adreno)", "Vortek (Mali və digərləri)"};
+    private static final String[] GPU_VALUES = {"auto", "turnip", "vortek"};
 
     // NFSMW-in öz ölçüləri (speed.exe-dən): yalnız 4:3 və 5:4.
     private static final String[] ASPECT_LABELS = {"4:3", "5:4"};
@@ -86,6 +89,14 @@ public class NfsSettingsActivity extends AppCompatActivity {
         swFullscreen.setOnCheckedChangeListener((button, checked) ->
             preferences.edit().putBoolean(PREF_FULLSCREEN, checked).apply());
         root.addView(swFullscreen, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        addTitle(root, "GPU sürücüsü");
+        addLabel(root, "Qrafika sürücüsü");
+        String savedGpu = preferences.getString(PREF_GPU_DRIVER, "auto");
+        int gpuIndex = 0;
+        for (int i = 0; i < GPU_VALUES.length; i++) if (GPU_VALUES[i].equals(savedGpu)) gpuIndex = i;
+        addSpinner(root, GPU_LABELS, gpuIndex, (position) ->
+            preferences.edit().putString(PREF_GPU_DRIVER, GPU_VALUES[position]).apply());
 
         addTitle(root, "Performans");
         addLabel(root, "FPS limiti");
