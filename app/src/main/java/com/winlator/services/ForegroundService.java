@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
-import com.winlator.MainActivity;
+import com.winlator.NfsLauncherActivity;
 import com.winlator.R;
 import com.winlator.XServerDisplayActivity;
 
@@ -275,7 +275,7 @@ public class ForegroundService extends Service {
         boolean containerActive = sessionActive.get();
 
         // Determine target activity: Game screen if active, else Main menu
-        Class<?> targetActivity = containerActive ? XServerDisplayActivity.class : MainActivity.class;
+        Class<?> targetActivity = containerActive ? XServerDisplayActivity.class : NfsLauncherActivity.class;
 
         Notification n = notificationUtils.createForegroundNotification(
                 getNotificationContent(),
