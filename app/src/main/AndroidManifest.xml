@@ -41,6 +41,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.winlator.NfsSettingsActivity"
+            android:theme="@style/AppThemeDark"
+            android:exported="false"
+            android:screenOrientation="sensor" />
+
         <activity android:name="com.winlator.XServerDisplayActivity"
             android:exported="false"
             android:theme="@style/AppThemeFullscreenDark"
