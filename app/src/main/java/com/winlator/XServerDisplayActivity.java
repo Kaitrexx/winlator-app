@@ -285,7 +285,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MainActivity.EDIT_INPUT_CONTROLS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AppConstants.EDIT_INPUT_CONTROLS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (editInputControlsCallback != null) {
                 editInputControlsCallback.run();
                 editInputControlsCallback = null;
@@ -627,7 +627,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
         }
 
-        if (MainActivity.DEBUG_MODE) rootView.addView(AppUtils.createDebugMsgTextView(this));
+        if (AppConstants.DEBUG_MODE) rootView.addView(AppUtils.createDebugMsgTextView(this));
         AppUtils.observeSoftKeyboardVisibility(drawerLayout, renderer::setScreenOffsetYRelativeToCursor);
     }
 
@@ -669,7 +669,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 inputControlsManager.loadProfiles(true);
                 loadProfileSpinner.run();
             };
-            startActivityForResult(intent, MainActivity.EDIT_INPUT_CONTROLS_REQUEST_CODE);
+            startActivityForResult(intent, AppConstants.EDIT_INPUT_CONTROLS_REQUEST_CODE);
         });
 
         dialog.setOnConfirmCallback(() -> {
@@ -758,7 +758,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 GeneralComponents.extractFile(GeneralComponents.Type.TURNIP, this, version, DefaultVersion.TURNIP);
             }
         }
-        else if (graphicsDriver[0].equals(GraphicsDrivers.VORTEK) && (changed || MainActivity.DEBUG_MODE)) {
+        else if (graphicsDriver[0].equals(GraphicsDrivers.VORTEK) && (changed || AppConstants.DEBUG_MODE)) {
             TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/vortek-" + DefaultVersion.VORTEK + ".tzst", rootDir);
         }
 
@@ -781,7 +781,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             case GraphicsDrivers.GLADIO:
                 envVars.put("GLADIO_NO_ERROR", "1");
 
-                if (changed || MainActivity.DEBUG_MODE) TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/gladio-"+DefaultVersion.GLADIO+".tzst", rootDir);
+                if (changed || AppConstants.DEBUG_MODE) TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/gladio-"+DefaultVersion.GLADIO+".tzst", rootDir);
                 break;
         }
     }
