@@ -297,6 +297,17 @@ public class NfsLauncherActivity extends AppCompatActivity {
         container.setScreenSize(size);
         container.setHUDMode((byte)preferences.getInt(NfsSettingsActivity.PREF_HUD_MODE, 0));
 
+        // NFS_GPU_V1: sürücü seçimi (avtomatik = Adreno-da Turnip, qalanında Vortek)
+        String gpuPref = preferences.getString(NfsSettingsActivity.PREF_GPU_DRIVER, "auto");
+        String wantedDriver;
+        if (gpuPref.equals("turnip")) wantedDriver = GraphicsDrivers.TURNIP + "," + GraphicsDrivers.DEFAULT_OPENGL_DRIVER;
+        else if (gpuPref.equals("vortek")) wantedDriver = GraphicsDrivers.VORTEK + "," + GraphicsDrivers.DEFAULT_OPENGL_DRIVER;
+        else wantedDriver = GraphicsDrivers.getDefaultDriver(this);
+        if (!GraphicsDrivers.parseIdentifiers(container.getGraphicsDriver())[0].equals(GraphicsDrivers.parseIdentifiers(wantedDriver)[0])) {
+            container.setGraphicsDriver(wantedDriver);
+            container.setGraphicsDriverConfig("");
+        }
+
         StringBuilder env = new StringBuilder();
         for (String token : container.getEnvVars().split(" ")) {
             if (!token.isEmpty() && !token.startsWith("DXVK_FRAME_RATE=")) env.append(token).append(' ');
