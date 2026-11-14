@@ -757,6 +757,7 @@ public class ControlElement {
     private void drawIcon(Canvas canvas, float cx, float cy, float width, float height, int iconId, boolean automargin) {
         Paint paint = inputControlsView.getPaint();
         Bitmap icon = inputControlsView.getIcon((byte)iconId);
+        if (icon == null) return; // NFS_ICON_V1
         paint.setColorFilter(propertyFlags.isSet(FLAG_PRESSED) ? inputControlsView.getDarkColorFilter() : inputControlsView.getLightColorFilter());
         float snappingSize = inputControlsView.getSnappingSize();
         int margin = automargin ? (int)(snappingSize * (shape == Shape.CIRCLE || shape == Shape.SQUARE ? 2.0f : 1.0f) * scale) : 0;
