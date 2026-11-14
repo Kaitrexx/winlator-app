@@ -272,6 +272,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 setupWineSystemFiles();
                 extractGraphicsDriverFiles();
                 changeWineAudioDriver();
+                applyNfsGameRegistry();
             }
             setupXEnvironment();
         });
@@ -1066,6 +1067,28 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
     public void setScreenEffectProfile(String screenEffectProfile) {
         this.screenEffectProfile = screenEffectProfile;
+    }
+
+    private void applyNfsGameRegistry() {
+        int index;
+        String size = xServer.screenInfo.width+"x"+xServer.screenInfo.height;
+        switch (size) {
+            case "640x480": index = 0; break;
+            case "800x600": index = 1; break;
+            case "1024x768": index = 2; break;
+            case "1280x960": index = 3; break;
+            case "1280x1024": index = 4; break;
+            case "1600x1200": index = 5; break;
+            default: return;
+        }
+
+        File systemRegFile = new File(rootFS.getRootDir(), RootFS.WINEPREFIX+"/system.reg");
+        if (!systemRegFile.isFile()) return;
+
+        try (WineRegistryEditor registryEditor = new WineRegistryEditor(systemRegFile)) {
+            registryEditor.setDwordValue("Software\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution", index);
+            registryEditor.setDwordValue("Software\\Wow6432Node\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution", index);
+        }
     }
 
     private void changeWineAudioDriver() {
