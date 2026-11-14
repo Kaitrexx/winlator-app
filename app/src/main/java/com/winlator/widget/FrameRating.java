@@ -31,6 +31,7 @@ public class FrameRating extends FrameLayout implements Runnable {
     private ActivityManager.MemoryInfo memoryInfo;
     private String cpuInfo = null;
     private byte tick = 0;
+    private boolean userHidden = false; // NFS_FPS_V1
 
     public FrameRating(Context context) {
         this(context, null);
@@ -85,6 +86,15 @@ public class FrameRating extends FrameLayout implements Runnable {
         }
     }
 
+    public boolean isUserHidden() {
+        return userHidden;
+    }
+
+    public void setUserHidden(boolean hidden) {
+        userHidden = hidden;
+        if (hidden) setVisibility(View.GONE);
+    }
+
     public Mode getMode() {
         return mode;
     }
@@ -119,6 +129,7 @@ public class FrameRating extends FrameLayout implements Runnable {
 
     @Override
     public void run() {
+        if (userHidden) return;
         if (getVisibility() == GONE) setVisibility(View.VISIBLE);
         ((TextView)fpsPanel.getChildAt(1)).setText(String.format(Locale.ENGLISH, "%.1f", lastFPS));
 
