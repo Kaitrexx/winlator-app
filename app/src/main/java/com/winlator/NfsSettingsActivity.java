@@ -32,6 +32,9 @@ public class NfsSettingsActivity extends AppCompatActivity {
     public static final String PREF_GPU_DRIVER = "nfs_gpu_driver"; // NFS_GPU_V1
     private static final String[] GPU_LABELS = {"Avtomatik", "Turnip (yalnız Snapdragon/Adreno)", "Vortek (Mali və digərləri)"};
     private static final String[] GPU_VALUES = {"auto", "turnip", "vortek"};
+    public static final String PREF_CPU_CORES = "nfs_cpu_cores"; // NFS_CPU_V1
+    private static final String[] CPU_LABELS = {"6,7 (hazırkı)", "4-7 (4 nüvə)", "0-7 (hamısı)"};
+    private static final String[] CPU_VALUES = {"6,7", "4,5,6,7", "0,1,2,3,4,5,6,7"};
 
     // NFSMW-in öz ölçüləri (speed.exe-dən): yalnız 4:3 və 5:4.
     private static final String[] ASPECT_LABELS = {"4:3", "5:4"};
@@ -99,6 +102,13 @@ public class NfsSettingsActivity extends AppCompatActivity {
             preferences.edit().putString(PREF_GPU_DRIVER, GPU_VALUES[position]).apply());
 
         addTitle(root, "Performans");
+        addLabel(root, "CPU nüvələri (test üçün)");
+        String savedCpu = preferences.getString(PREF_CPU_CORES, CPU_VALUES[0]);
+        int cpuIndex = 0;
+        for (int i = 0; i < CPU_VALUES.length; i++) if (CPU_VALUES[i].equals(savedCpu)) cpuIndex = i;
+        addSpinner(root, CPU_LABELS, cpuIndex, (position) ->
+            preferences.edit().putString(PREF_CPU_CORES, CPU_VALUES[position]).apply());
+
         addLabel(root, "FPS limiti");
         int fps = preferences.getInt(PREF_FPS_LIMIT, 0);
         int fpsIndex = 0;

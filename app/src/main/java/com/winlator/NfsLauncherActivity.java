@@ -297,6 +297,27 @@ public class NfsLauncherActivity extends AppCompatActivity {
         container.setScreenSize(size);
         container.setHUDMode((byte)preferences.getInt(NfsSettingsActivity.PREF_HUD_MODE, 0));
 
+        // NFS_CPU_V1: CPU nüvə seçimi (mövcud olmayan nüvələr çıxarılır)
+        String cpuPref = preferences.getString(NfsSettingsActivity.PREF_CPU_CORES, CPU_LIST);
+        int cpuCount = Runtime.getRuntime().availableProcessors();
+        StringBuilder cpuOut = new StringBuilder();
+        for (String core : cpuPref.split(",")) {
+            int index;
+            try { index = Integer.parseInt(core.trim()); } catch (NumberFormatException e) { continue; }
+            if (index < cpuCount) {
+                if (cpuOut.length() > 0) cpuOut.append(',');
+                cpuOut.append(index);
+            }
+        }
+        if (cpuOut.length() == 0) {
+            for (int i = 0; i < cpuCount; i++) {
+                if (i > 0) cpuOut.append(',');
+                cpuOut.append(i);
+            }
+        }
+        container.setCPUList(cpuOut.toString());
+        container.setCPUListWoW64(cpuOut.toString());
+
         // NFS_GPU_V1: sürücü seçimi (avtomatik = Adreno-da Turnip, qalanında Vortek)
         String gpuPref = preferences.getString(NfsSettingsActivity.PREF_GPU_DRIVER, "auto");
         String wantedDriver;
