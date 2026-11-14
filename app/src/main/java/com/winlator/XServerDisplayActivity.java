@@ -1069,6 +1069,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         this.screenEffectProfile = screenEffectProfile;
     }
 
+    private void nfsDebugToast(String msg) {
+        runOnUiThread(() -> android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_LONG).show());
+    }
+
     private void applyNfsGameRegistry() {
         int index;
         String size = xServer.screenInfo.width+"x"+xServer.screenInfo.height;
@@ -1079,16 +1083,28 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             case "1280x960": index = 3; break;
             case "1280x1024": index = 4; break;
             case "1600x1200": index = 5; break;
-            default: return;
+            default:
+                nfsDebugToast("NFS reg: olcu siyahida yoxdur: "+size);
+                return;
         }
 
         File systemRegFile = new File(rootFS.getRootDir(), RootFS.WINEPREFIX+"/system.reg");
-        if (!systemRegFile.isFile()) return;
+        if (!systemRegFile.isFile()) {
+            nfsDebugToast("NFS reg: system.reg YOXDUR ("+size+")");
+            return;
+        }
 
         try (WineRegistryEditor registryEditor = new WineRegistryEditor(systemRegFile)) {
             registryEditor.setDwordValue("Software\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution", index);
             registryEditor.setDwordValue("Software\\Wow6432Node\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution", index);
         }
+
+        Integer v1, v2;
+        try (WineRegistryEditor check = new WineRegistryEditor(systemRegFile)) {
+            v1 = check.getDwordValue("Software\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution");
+            v2 = check.getDwordValue("Software\\Wow6432Node\\EA Games\\Need for Speed Most Wanted", "g_RacingResolution");
+        }
+        nfsDebugToast("NFS reg: ekran "+size+", yazildi="+index+", oxundu="+v1+"/"+v2);
     }
 
     private void changeWineAudioDriver() {
