@@ -626,24 +626,27 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private ControlsProfile ensureNfsControlsProfile() {
         try {
             for (ControlsProfile p : inputControlsManager.getProfiles(true)) {
-                if (NFS_PROFILE_NAME.equals(p.getName())) return p;
+                if (NFS_PROFILE_NAME.equals(p.getName())) {
+                    patchNfsIcons(p);
+                    return p;
+                }
             }
 
             JSONArray elements = new JSONArray();
             // Sol: sola / saga donus
-            elements.put(nfsButton("CIRCLE", "KEY_LEFT", "SOL", 0.08f, 0.78f, 1.5f));
-            elements.put(nfsButton("CIRCLE", "KEY_RIGHT", "SAG", 0.24f, 0.78f, 1.5f));
+            elements.put(nfsButton("CIRCLE", "KEY_LEFT", 20, 0.08f, 0.78f, 1.5f));
+            elements.put(nfsButton("CIRCLE", "KEY_RIGHT", 21, 0.24f, 0.78f, 1.5f));
             // Sag: gaz, eylec, nitro, speedbreaker, el eylec
-            elements.put(nfsButton("CIRCLE", "KEY_UP", "GAZ", 0.91f, 0.64f, 1.6f));
-            elements.put(nfsButton("CIRCLE", "KEY_DOWN", "EYLEC", 0.76f, 0.82f, 1.4f));
-            elements.put(nfsButton("CIRCLE", "KEY_X", "NITRO", 0.76f, 0.52f, 1.1f));
-            elements.put(nfsButton("CIRCLE", "KEY_G", "SB", 0.91f, 0.36f, 1.0f));
-            elements.put(nfsButton("RECT", "KEY_SPACE", "EL EYLEC", 0.58f, 0.86f, 1.1f));
+            elements.put(nfsButton("CIRCLE", "KEY_UP", 22, 0.91f, 0.64f, 1.6f));
+            elements.put(nfsButton("CIRCLE", "KEY_DOWN", 23, 0.76f, 0.82f, 1.4f));
+            elements.put(nfsButton("CIRCLE", "KEY_X", 24, 0.76f, 0.52f, 1.1f));
+            elements.put(nfsButton("CIRCLE", "KEY_G", 25, 0.91f, 0.36f, 1.0f));
+            elements.put(nfsButton("RECT", "KEY_SPACE", 26, 0.58f, 0.86f, 1.1f));
             // Ust: pauza, kamera, geri baxis, reset
-            elements.put(nfsButton("CIRCLE", "KEY_ESC", "PAUZA", 0.40f, 0.09f, 0.9f));
-            elements.put(nfsButton("CIRCLE", "KEY_C", "KAMERA", 0.50f, 0.09f, 0.9f));
-            elements.put(nfsButton("CIRCLE", "KEY_L", "GERI", 0.60f, 0.09f, 0.9f));
-            elements.put(nfsButton("CIRCLE", "KEY_R", "RESET", 0.70f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_ESC", 27, 0.40f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_C", 28, 0.50f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_L", 29, 0.60f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_R", 30, 0.70f, 0.09f, 0.9f));
 
             JSONObject data = new JSONObject();
             data.put("id", 1);
@@ -657,7 +660,44 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
     }
 
-    private static JSONObject nfsButton(String shape, String binding, String text, float x, float y, float scale) throws JSONException {
+    // NFS_ICON_V1: movcud profildeki bos ikonlu dymelere ikon yazir (yer ve redakteleri pozmur)
+    private void patchNfsIcons(ControlsProfile profile) {
+        try {
+            File file = ControlsProfile.getProfileFile(this, profile.id);
+            if (!file.isFile()) return;
+            JSONObject data = new JSONObject(FileUtils.readString(file));
+            JSONArray elements = data.getJSONArray("elements");
+            boolean changed = false;
+            for (int i = 0; i < elements.length(); i++) {
+                JSONObject element = elements.getJSONObject(i);
+                if (element.optInt("iconId", 0) != 0) continue;
+                String binding = element.getJSONArray("bindings").getString(0);
+                int iconId = 0;
+                switch (binding) {
+                    case "KEY_LEFT": iconId = 20; break;
+                    case "KEY_RIGHT": iconId = 21; break;
+                    case "KEY_UP": iconId = 22; break;
+                    case "KEY_DOWN": iconId = 23; break;
+                    case "KEY_X": iconId = 24; break;
+                    case "KEY_G": iconId = 25; break;
+                    case "KEY_SPACE": iconId = 26; break;
+                    case "KEY_ESC": iconId = 27; break;
+                    case "KEY_C": iconId = 28; break;
+                    case "KEY_L": iconId = 29; break;
+                    case "KEY_R": iconId = 30; break;
+                }
+                if (iconId != 0) {
+                    element.put("iconId", iconId);
+                    element.put("text", "");
+                    changed = true;
+                }
+            }
+            if (changed) FileUtils.writeString(file, data.toString());
+        }
+        catch (Exception e) {}
+    }
+
+    private static JSONObject nfsButton(String shape, String binding, int iconId, float x, float y, float scale) throws JSONException {
         JSONObject element = new JSONObject();
         element.put("type", "BUTTON");
         element.put("shape", shape);
@@ -669,8 +709,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         element.put("x", (double)x);
         element.put("y", (double)y);
         element.put("toggleSwitch", false);
-        element.put("text", text);
-        element.put("iconId", 0);
+        element.put("text", "");
+        element.put("iconId", iconId);
         return element;
     }
 
