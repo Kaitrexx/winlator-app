@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,20 +19,31 @@ import androidx.preference.PreferenceManager;
 import com.winlator.core.AppUtils;
 import com.winlator.core.LocaleHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NfsSettingsActivity extends AppCompatActivity {
     public static final String PREF_SCREEN_SIZE = "nfs_screen_size";
+    public static final String PREF_ASPECT = "nfs_aspect";
     public static final String PREF_FPS_LIMIT = "nfs_fps_limit";
     public static final String PREF_HUD_MODE = "nfs_hud_mode";
     public static final String PREF_FULLSCREEN = "nfs_fullscreen";
     public static final String DEFAULT_SCREEN_SIZE = "640x480";
 
-    private static final String[] SIZE_LABELS = {"640x480", "800x600", "1280x720", "Cihaz ölçüsü"};
-    private static final String[] SIZE_VALUES = {"640x480", "800x600", "1280x720", "native"};
+    // NFSMW-in öz ölçüləri (speed.exe-dən): yalnız 4:3 və 5:4.
+    private static final String[] ASPECT_LABELS = {"4:3", "5:4"};
+    private static final String[] ASPECT_VALUES = {"4:3", "5:4"};
+    private static final String[] SIZES_43 = {"640x480", "800x600", "1024x768", "1280x960", "1600x1200"};
+    private static final String[] SIZES_54 = {"1280x1024"};
+
     private static final String[] FPS_LABELS = {"Limitsiz", "30", "60"};
     private static final int[] FPS_VALUES = {0, 30, 60};
 
     private static final String[] HUD_LABELS = {"Söndürülü", "Sadə (yalnız FPS)", "Tam (FPS, GPU, RAM, CPU)"};
 
+    private final List<String> sizeValues = new ArrayList<>();
+    private final List<String> sizeLabels = new ArrayList<>();
+    private Spinner sizeSpinner;
     private SharedPreferences preferences;
 
     @Override
@@ -49,17 +61,27 @@ public class NfsSettingsActivity extends AppCompatActivity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(dp(24), dp(24), dp(24), dp(24));
 
+        String savedSize = preferences.getString(PREF_SCREEN_SIZE, DEFAULT_SCREEN_SIZE);
+        String aspect = savedSize.equals("1280x1024") ? "5:4" : "4:3";
+
         addTitle(root, "Qrafika");
-        addLabel(root, "Ekran ölçüsü");
-        String size = preferences.getString(PREF_SCREEN_SIZE, DEFAULT_SCREEN_SIZE);
-        int sizeIndex = 0;
-        for (int i = 0; i < SIZE_VALUES.length; i++) if (SIZE_VALUES[i].equals(size)) sizeIndex = i;
-        addSpinner(root, SIZE_LABELS, sizeIndex, (position) ->
-            preferences.edit().putString(PREF_SCREEN_SIZE, SIZE_VALUES[position]).apply());
+
+        addLabel(root, "Nisbət");
+        fillSizes(aspect);
+        int sizeIndex = Math.max(0, sizeValues.indexOf(savedSize));
+        int aspectIndex = aspect.equals("5:4") ? 1 : 0;
+
+        addSpinner(root, ASPECT_LABELS, aspectIndex, (position) -> applyAspect(ASPECT_VALUES[position]));
+
+        addLabel(root, "Çözünürlük");
+        sizeSpinner = addSpinner(root, sizeLabels.toArray(new String[0]), sizeIndex, (position) -> {
+            if (position >= 0 && position < sizeValues.size())
+                preferences.edit().putString(PREF_SCREEN_SIZE, sizeValues.get(position)).apply();
+        });
 
         Switch swFullscreen = new Switch(this);
-        swFullscreen.setText("Tam ekran (ekranı doldur)");
-        swFullscreen.setChecked(preferences.getBoolean(PREF_FULLSCREEN, false));
+        swFullscreen.setText("Ekranı dart (tam ekran)");
+        swFullscreen.setChecked(preferences.getBoolean(PREF_FULLSCREEN, true));
         swFullscreen.setPadding(0, dp(12), 0, dp(4));
         swFullscreen.setOnCheckedChangeListener((button, checked) ->
             preferences.edit().putBoolean(PREF_FULLSCREEN, checked).apply());
@@ -79,18 +101,49 @@ public class NfsSettingsActivity extends AppCompatActivity {
             preferences.edit().putInt(PREF_HUD_MODE, position).apply());
 
         TextView note = new TextView(this);
-        note.setText("Dəyişikliklər növbəti BAŞLAT-da tətbiq olunur.");
+        note.setText("Dəyişikliklər növbəti BAŞLAT-da tətbiq olunur. 1280x960 və yuxarısı RAM-ı çox işlədir.");
         note.setTextSize(13);
         note.setPadding(0, dp(24), 0, 0);
         root.addView(note);
 
-        setContentView(root);
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.addView(root);
+        setContentView(scrollView);
     }
 
     private interface OnPick { void onPick(int position); }
 
     private int dp(int value) {
         return (int)(value * getResources().getDisplayMetrics().density);
+    }
+
+    private void fillSizes(String aspect) {
+        sizeValues.clear();
+        sizeLabels.clear();
+        String[] sizes = aspect.equals("5:4") ? SIZES_54 : SIZES_43;
+        for (String size : sizes) {
+            sizeValues.add(size);
+            boolean heavy = size.equals("1280x960") || size.equals("1280x1024") || size.equals("1600x1200");
+            sizeLabels.add(heavy ? size + " (ağır)" : size);
+        }
+    }
+
+    private void applyAspect(String aspect) {
+        String saved = preferences.getString(PREF_SCREEN_SIZE, DEFAULT_SCREEN_SIZE);
+        fillSizes(aspect);
+
+        int index = sizeValues.indexOf(saved);
+        if (index < 0) index = 0;
+
+        preferences.edit()
+            .putString(PREF_ASPECT, aspect)
+            .putString(PREF_SCREEN_SIZE, sizeValues.get(index))
+            .apply();
+
+        if (sizeSpinner != null) {
+            sizeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>(sizeLabels)));
+            sizeSpinner.setSelection(index);
+        }
     }
 
     private void addTitle(LinearLayout root, String text) {
@@ -108,7 +161,7 @@ public class NfsSettingsActivity extends AppCompatActivity {
         root.addView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
-    private void addSpinner(LinearLayout root, String[] labels, int selected, OnPick listener) {
+    private Spinner addSpinner(LinearLayout root, String[] labels, int selected, OnPick listener) {
         Spinner spinner = new Spinner(this);
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, labels));
         spinner.setSelection(selected);
@@ -122,5 +175,6 @@ public class NfsSettingsActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         root.addView(spinner, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return spinner;
     }
 }
