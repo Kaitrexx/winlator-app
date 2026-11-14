@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +22,11 @@ public class NfsSettingsActivity extends AppCompatActivity {
     public static final String PREF_SCREEN_SIZE = "nfs_screen_size";
     public static final String PREF_FPS_LIMIT = "nfs_fps_limit";
     public static final String PREF_HUD_MODE = "nfs_hud_mode";
+    public static final String PREF_FULLSCREEN = "nfs_fullscreen";
     public static final String DEFAULT_SCREEN_SIZE = "640x480";
 
-    private static final String[] SIZE_LABELS = {"640x480", "800x600", "1280x720"};
-    private static final String[] SIZE_VALUES = {"640x480", "800x600", "1280x720"};
+    private static final String[] SIZE_LABELS = {"640x480", "800x600", "1280x720", "Cihaz ölçüsü"};
+    private static final String[] SIZE_VALUES = {"640x480", "800x600", "1280x720", "native"};
     private static final String[] FPS_LABELS = {"Limitsiz", "30", "60"};
     private static final int[] FPS_VALUES = {0, 30, 60};
 
@@ -54,6 +56,14 @@ public class NfsSettingsActivity extends AppCompatActivity {
         for (int i = 0; i < SIZE_VALUES.length; i++) if (SIZE_VALUES[i].equals(size)) sizeIndex = i;
         addSpinner(root, SIZE_LABELS, sizeIndex, (position) ->
             preferences.edit().putString(PREF_SCREEN_SIZE, SIZE_VALUES[position]).apply());
+
+        Switch swFullscreen = new Switch(this);
+        swFullscreen.setText("Tam ekran (ekranı doldur)");
+        swFullscreen.setChecked(preferences.getBoolean(PREF_FULLSCREEN, false));
+        swFullscreen.setPadding(0, dp(12), 0, dp(4));
+        swFullscreen.setOnCheckedChangeListener((button, checked) ->
+            preferences.edit().putBoolean(PREF_FULLSCREEN, checked).apply());
+        root.addView(swFullscreen, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         addTitle(root, "Performans");
         addLabel(root, "FPS limiti");

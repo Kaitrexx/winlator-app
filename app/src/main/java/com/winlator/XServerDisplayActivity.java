@@ -587,6 +587,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         renderer.setCursorColor(preferences.getInt("cursor_color", 0xffffff));
         renderer.setCursorScale(preferences.getFloat("cursor_scale", 1.0f));
         renderer.setForceWindowsFullscreen(shortcut != null && shortcut.getExtra("forceFullscreen", "0").equals("1"));
+        if (preferences.getBoolean("nfs_fullscreen", false)) renderer.toggleFullscreen();
 
         xServer.setRenderer(renderer);
         rootView.addView(xServerView);
