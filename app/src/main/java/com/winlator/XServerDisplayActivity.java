@@ -365,6 +365,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 showInputControlsDialog();
                 drawerLayout.closeDrawers();
                 break;
+            case R.id.menu_item_fps:
+                if (frameRating != null) frameRating.setUserHidden(!frameRating.isUserHidden());
+                drawerLayout.closeDrawers();
+                break;
             case R.id.menu_item_screen_effect:
                 (new ScreenEffectDialog(this)).show();
                 drawerLayout.closeDrawers();
@@ -568,9 +572,12 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         inputControlsView.setVisibility(View.GONE);
         rootView.addView(inputControlsView);
 
-        if (container != null && container.getHUDMode() != FrameRating.Mode.DISABLED.ordinal()) {
+        if (container != null) {
+            // NFS_FPS_V1: FPS paneli hemise yaradilir, menyudan acilib-baglanir
+            boolean hudOn = container.getHUDMode() != FrameRating.Mode.DISABLED.ordinal();
             frameRating = new FrameRating(this);
-            frameRating.setMode(FrameRating.Mode.values()[container.getHUDMode()]);
+            frameRating.setMode(hudOn ? FrameRating.Mode.values()[container.getHUDMode()] : FrameRating.Mode.SIMPLE);
+            frameRating.setUserHidden(!hudOn);
             frameRating.setVisibility(View.GONE);
             rootView.addView(frameRating);
         }
