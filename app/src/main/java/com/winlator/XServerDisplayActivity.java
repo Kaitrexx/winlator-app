@@ -590,6 +590,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
         }
 
+        // NFS_CTRL_V1: NFS controller profili (yoxdursa yaradilir) oyun acilanda avtomatik aktiv olur
+        ControlsProfile nfsProfile = ensureNfsControlsProfile();
+        if (nfsProfile != null) showInputControls(nfsProfile);
+
         android.widget.TextView btSettings = new android.widget.TextView(this);
         btSettings.setText("\u2699\uFE0E");
         btSettings.setTextColor(0xffffffff);
@@ -614,6 +618,60 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         if (AppConstants.DEBUG_MODE) rootView.addView(AppUtils.createDebugMsgTextView(this));
         AppUtils.observeSoftKeyboardVisibility(drawerLayout, renderer::setScreenOffsetYRelativeToCursor);
+    }
+
+    // NFS_CTRL_V1
+    private static final String NFS_PROFILE_NAME = "NFS MW";
+
+    private ControlsProfile ensureNfsControlsProfile() {
+        try {
+            for (ControlsProfile p : inputControlsManager.getProfiles(true)) {
+                if (NFS_PROFILE_NAME.equals(p.getName())) return p;
+            }
+
+            JSONArray elements = new JSONArray();
+            // Sol: sola / saga donus
+            elements.put(nfsButton("CIRCLE", "KEY_LEFT", "SOL", 0.08f, 0.78f, 1.5f));
+            elements.put(nfsButton("CIRCLE", "KEY_RIGHT", "SAG", 0.24f, 0.78f, 1.5f));
+            // Sag: gaz, eylec, nitro, speedbreaker, el eylec
+            elements.put(nfsButton("CIRCLE", "KEY_UP", "GAZ", 0.91f, 0.64f, 1.6f));
+            elements.put(nfsButton("CIRCLE", "KEY_DOWN", "EYLEC", 0.76f, 0.82f, 1.4f));
+            elements.put(nfsButton("CIRCLE", "KEY_X", "NITRO", 0.76f, 0.52f, 1.1f));
+            elements.put(nfsButton("CIRCLE", "KEY_G", "SB", 0.91f, 0.36f, 1.0f));
+            elements.put(nfsButton("RECT", "KEY_SPACE", "EL EYLEC", 0.58f, 0.86f, 1.1f));
+            // Ust: pauza, kamera, geri baxis, reset
+            elements.put(nfsButton("CIRCLE", "KEY_ESC", "PAUZA", 0.40f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_C", "KAMERA", 0.50f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_L", "GERI", 0.60f, 0.09f, 0.9f));
+            elements.put(nfsButton("CIRCLE", "KEY_R", "RESET", 0.70f, 0.09f, 0.9f));
+
+            JSONObject data = new JSONObject();
+            data.put("id", 1);
+            data.put("name", NFS_PROFILE_NAME);
+            data.put("cursorSpeed", 1.0);
+            data.put("elements", elements);
+            return inputControlsManager.importProfile(data);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static JSONObject nfsButton(String shape, String binding, String text, float x, float y, float scale) throws JSONException {
+        JSONObject element = new JSONObject();
+        element.put("type", "BUTTON");
+        element.put("shape", shape);
+        JSONArray bindings = new JSONArray();
+        bindings.put(binding);
+        for (int i = 1; i < 4; i++) bindings.put("NONE");
+        element.put("bindings", bindings);
+        element.put("scale", (double)scale);
+        element.put("x", (double)x);
+        element.put("y", (double)y);
+        element.put("toggleSwitch", false);
+        element.put("text", text);
+        element.put("iconId", 0);
+        return element;
     }
 
     private void showInputControlsDialog() {
