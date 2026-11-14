@@ -20,12 +20,15 @@ import com.winlator.core.LocaleHelper;
 public class NfsSettingsActivity extends AppCompatActivity {
     public static final String PREF_SCREEN_SIZE = "nfs_screen_size";
     public static final String PREF_FPS_LIMIT = "nfs_fps_limit";
+    public static final String PREF_HUD_MODE = "nfs_hud_mode";
     public static final String DEFAULT_SCREEN_SIZE = "640x480";
 
     private static final String[] SIZE_LABELS = {"640x480", "800x600", "1280x720"};
     private static final String[] SIZE_VALUES = {"640x480", "800x600", "1280x720"};
     private static final String[] FPS_LABELS = {"Limitsiz", "30", "60"};
     private static final int[] FPS_VALUES = {0, 30, 60};
+
+    private static final String[] HUD_LABELS = {"Söndürülü", "Sadə (yalnız FPS)", "Tam (FPS, GPU, RAM, CPU)"};
 
     private SharedPreferences preferences;
 
@@ -59,6 +62,11 @@ public class NfsSettingsActivity extends AppCompatActivity {
         for (int i = 0; i < FPS_VALUES.length; i++) if (FPS_VALUES[i] == fps) fpsIndex = i;
         addSpinner(root, FPS_LABELS, fpsIndex, (position) ->
             preferences.edit().putInt(PREF_FPS_LIMIT, FPS_VALUES[position]).apply());
+
+        addTitle(root, "Göstərici");
+        addLabel(root, "Oyun içi performans göstəricisi");
+        addSpinner(root, HUD_LABELS, preferences.getInt(PREF_HUD_MODE, 0), (position) ->
+            preferences.edit().putInt(PREF_HUD_MODE, position).apply());
 
         TextView note = new TextView(this);
         note.setText("Dəyişikliklər növbəti BAŞLAT-da tətbiq olunur.");

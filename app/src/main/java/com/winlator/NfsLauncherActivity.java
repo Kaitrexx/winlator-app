@@ -295,6 +295,7 @@ public class NfsLauncherActivity extends AppCompatActivity {
         String size = preferences.getString(NfsSettingsActivity.PREF_SCREEN_SIZE, NfsSettingsActivity.DEFAULT_SCREEN_SIZE);
         int fps = preferences.getInt(NfsSettingsActivity.PREF_FPS_LIMIT, 0);
         container.setScreenSize(size);
+        container.setHUDMode(preferences.getInt(NfsSettingsActivity.PREF_HUD_MODE, 0));
 
         StringBuilder env = new StringBuilder();
         for (String token : container.getEnvVars().split(" ")) {
