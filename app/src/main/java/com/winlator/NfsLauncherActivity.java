@@ -126,7 +126,7 @@ public class NfsLauncherActivity extends AppCompatActivity {
         AppCompatButton advancedButton = new AppCompatButton(this);
         advancedButton.setText("Əlavə ayarlar");
         advancedButton.setAllCaps(false);
-        advancedButton.setOnClickListener((v) -> startActivity(new Intent(this, MainActivity.class)));
+        advancedButton.setOnClickListener((v) -> startActivity(new Intent(this, NfsSettingsActivity.class)));
         LinearLayout.LayoutParams advancedParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         advancedParams.topMargin = dp(32);
         root.addView(advancedButton, advancedParams);
@@ -256,7 +256,7 @@ public class NfsLauncherActivity extends AppCompatActivity {
 
         if (existing != null) {
             existing.setDrives(drives);
-            existing.saveData();
+            applySettings(existing);
             launch(existing.id, exe);
             return;
         }
@@ -279,13 +279,30 @@ public class NfsLauncherActivity extends AppCompatActivity {
                     updateUI();
                     Toast.makeText(this, "Container yaradıla bilmədi", Toast.LENGTH_LONG).show();
                 }
-                else launch(container.id, exe);
+                else {
+                    applySettings(container);
+                    launch(container.id, exe);
+                }
             });
         }
         catch (JSONException e) {
             busy = false;
             updateUI();
         }
+    }
+
+    private void applySettings(Container container) {
+        String size = preferences.getString(NfsSettingsActivity.PREF_SCREEN_SIZE, NfsSettingsActivity.DEFAULT_SCREEN_SIZE);
+        int fps = preferences.getInt(NfsSettingsActivity.PREF_FPS_LIMIT, 0);
+        container.setScreenSize(size);
+
+        StringBuilder env = new StringBuilder();
+        for (String token : container.getEnvVars().split(" ")) {
+            if (!token.isEmpty() && !token.startsWith("DXVK_FRAME_RATE=")) env.append(token).append(' ');
+        }
+        if (fps > 0) env.append("DXVK_FRAME_RATE=").append(fps);
+        container.setEnvVars(env.toString().trim());
+        container.saveData();
     }
 
     private void launch(int containerId, File exe) {
@@ -296,4 +313,4 @@ public class NfsLauncherActivity extends AppCompatActivity {
         busy = false;
         updateUI();
     }
-          }
+}
