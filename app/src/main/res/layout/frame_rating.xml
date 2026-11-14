@@ -8,39 +8,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="12dp"
         android:gravity="center_vertical"
-        android:background="#33000000">
+        android:background="@drawable/nfs_hud_bg">
 
         <LinearLayout
             android:id="@+id/LLFPSPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="0dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="12dp"
-                android:text="FPS:"
-                android:textColor="#0277bd"
+                android:text="FPS"
+                android:textColor="#FFC107"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
+                android:textSize="18dp"
                 android:text="0"
-                android:textColor="#ffffff"
+                android:textColor="#FFC107"
                 android:includeFontPadding="false"
                 android:maxLines="1" />
         </LinearLayout>
@@ -50,28 +53,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
-                android:text="GPU:"
-                android:textColor="#c62828"
+                android:textSize="11dp"
+                android:text="GPU"
+                android:textColor="#E53935"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
+                android:textSize="11dp"
                 android:text="0"
-                android:textColor="#ffffff"
+                android:textColor="#E0E0E0"
                 android:includeFontPadding="false"
                 android:maxLines="1" />
         </LinearLayout>
@@ -81,28 +84,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
-                android:text="RAM:"
-                android:textColor="#558b2f"
+                android:textSize="11dp"
+                android:text="RAM"
+                android:textColor="#E53935"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
+                android:textSize="11dp"
                 android:text="0"
-                android:textColor="#ffffff"
+                android:textColor="#E0E0E0"
                 android:includeFontPadding="false"
                 android:maxLines="1" />
         </LinearLayout>
@@ -112,28 +115,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
-                android:text="CPU:"
-                android:textColor="#ef6c00"
+                android:textSize="11dp"
+                android:text="CPU"
+                android:textColor="#E53935"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textStyle="bold"
-                android:textSize="12dp"
+                android:textSize="11dp"
                 android:text="0"
-                android:textColor="#ffffff"
+                android:textColor="#E0E0E0"
                 android:includeFontPadding="false"
                 android:maxLines="1" />
         </LinearLayout>
