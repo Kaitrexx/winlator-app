@@ -350,12 +350,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
     @Override
     public void onBackPressed() {
-        if (environment != null) {
-            if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-            else drawerLayout.closeDrawers();
-        }
+        // NFS_MENU_V2: Back duymesi hec ne etmir, menyu yalniz settings ikonu ile acilir
     }
 
     @Override
@@ -370,52 +365,13 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 showInputControlsDialog();
                 drawerLayout.closeDrawers();
                 break;
-            case R.id.menu_item_toggle_fullscreen:
-                renderer.toggleFullscreen();
-                drawerLayout.closeDrawers();
-                break;
-            case R.id.menu_item_task_manager:
-                (new TaskManagerDialog(this)).show();
-                drawerLayout.closeDrawers();
-                break;
-            case R.id.menu_item_active_windows:
-                (new ActiveWindowsDialog(this)).show();
-                drawerLayout.closeDrawers();
-                break;
-            case R.id.menu_item_magnifier:
-                if (magnifierView == null) {
-                    final FrameLayout container = findViewById(R.id.FLXServerDisplay);
-                    magnifierView = new MagnifierView(this);
-                    magnifierView.setZoomButtonCallback((value) -> {
-                        renderer.setMagnifierZoom(Mathf.clamp(renderer.getMagnifierZoom() + value, 1.0f, 3.0f));
-                        magnifierView.setZoomValue(renderer.getMagnifierZoom());
-                    });
-                    magnifierView.setZoomValue(renderer.getMagnifierZoom());
-                    magnifierView.setHideButtonCallback(() -> {
-                        container.removeView(magnifierView);
-                        magnifierView = null;
-                    });
-                    container.addView(magnifierView);
-                }
-                drawerLayout.closeDrawers();
-                break;
             case R.id.menu_item_screen_effect:
                 (new ScreenEffectDialog(this)).show();
-                drawerLayout.closeDrawers();
-                break;
-            case R.id.menu_item_pip_mode:
-                PictureInPictureParams pipParams = (new PictureInPictureParams.Builder())
-                    .setAspectRatio(screenInfo.aspectRatio())
-                    .build();
-                enterPictureInPictureMode(pipParams);
                 drawerLayout.closeDrawers();
                 break;
             case R.id.menu_item_logs:
                 debugDialog.show();
                 drawerLayout.closeDrawers();
-                break;
-            case R.id.menu_item_touchpad_help:
-                showTouchpadHelpDialog();
                 break;
             case R.id.menu_item_exit:
                 exit();
@@ -598,9 +554,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         touchpadView = new TouchpadView(this, xServer, capturePointerOnExternalMouse);
         touchpadView.setSensitivity(globalCursorSpeed);
         touchpadView.setMoveCursorToTouchpoint(preferences.getBoolean("move_cursor_to_touchpoint", false));
-        touchpadView.setFourFingersTapCallback(() -> {
-            if (!drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.openDrawer(GravityCompat.START);
-        });
+        // NFS_MENU_V2: dord barmaqla menyu acilmasi sondurulub
         rootView.addView(touchpadView);
 
         inputControlsView = new InputControlsView(this);
