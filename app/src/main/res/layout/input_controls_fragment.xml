@@ -1,149 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- NFS_DESIGN_V2: İdarəetmə ekranı (şaquli) -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="#0A0A0B">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FFC107" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/nfs_card_bg"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nfs_card_profile"
+                android:textColor="#9A9A9A"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
 
             <Spinner
-                style="@style/ComboBox"
                 android:id="@+id/SProfile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                style="@style/ComboBox"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/nfs_field_bg"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp" />
 
-            <LinearLayout style="@style/Toolbox">
+            <!-- Profil idarəsi (əlavə et/dəyiş/kopyala/sil) şəkildəki dizaynda yoxdur, gizlədilib. Lazım olsa gone -> visible -->
+            <LinearLayout
+                style="@style/Toolbox"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
                 <ImageButton
-                    style="@style/ListMenuButton"
                     android:id="@+id/BTAddProfile"
+                    style="@style/ListMenuButton"
                     android:src="@drawable/icon_add" />
 
                 <ImageButton
-                    style="@style/ListMenuButton"
                     android:id="@+id/BTEditProfile"
+                    style="@style/ListMenuButton"
                     android:src="@drawable/icon_edit" />
 
                 <ImageButton
-                    style="@style/ListMenuButton"
                     android:id="@+id/BTDuplicateProfile"
+                    style="@style/ListMenuButton"
                     android:src="@drawable/icon_duplicate" />
 
                 <ImageButton
-                    style="@style/ListMenuButton"
                     android:id="@+id/BTRemoveProfile"
+                    style="@style/ListMenuButton"
                     android:layout_marginRight="0dp"
                     android:src="@drawable/icon_remove" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cursor_speed"/>
-
-        <com.winlator.widget.SeekBar
-            android:id="@+id/SBCursorSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:suffix="%"
-            app:minValue="10"
-            app:maxValue="250" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/overlay_opacity"/>
-
-        <com.winlator.widget.SeekBar
-            android:id="@+id/SBOverlayOpacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:suffix="%"
-            app:step="5"
-            app:minValue="10"
-            app:maxValue="100" />
-
-        <CheckBox
-            android:id="@+id/CBDisableMouseInput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/disable_mouse_input"
-            android:layout_marginTop="8dp" />
-
-        <View
-            style="@style/HorizontalLine"
-            android:layout_marginTop="16dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/nfs_card_bg"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nfs_card_opacity"
+                android:textColor="#9A9A9A"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:text="@string/nfs_opacity_label"
+                    android:textColor="#C8C8CC"
+                    android:textSize="11sp" />
+
+                <com.winlator.widget.SeekBar
+                    android:id="@+id/SBOverlayOpacity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:minValue="10"
+                    app:maxValue="100"
+                    app:step="5"
+                    app:suffix="%"
+                    app:textSize="12sp"
+                    app:nfsTrackColor="#2A2A2E"
+                    app:nfsValueColor="#FFC107"
+                    app:nfsThumbColor="#FFC107" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/nfs_card_bg"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nfs_card_editor"
+                android:textColor="#9A9A9A"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/nfs_editor_desc"
+                android:textColor="#9A9A9A"
+                android:textSize="11sp" />
 
             <Button
-                style="@style/ButtonNeutral"
-                android:id="@+id/BTImportProfile"
-                android:layout_width="0dp"
+                android:id="@+id/BTControlsEditor"
+                style="@style/NfsButtonPositive"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/nfs_editor_open" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/nfs_card_bg"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:text="@string/nfs_card_gamepads"
+                android:textColor="#9A9A9A"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
+
+            <LinearLayout
+                android:id="@+id/LLExternalControllers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/TVEmptyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/nfs_no_gamepads"
+                android:textColor="#C8C8CC"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </LinearLayout>
+        <!-- Şəkildəki dizaynda olmayan ayarlar: kod onları tapa bilsin deyə qalır, amma gizlidir -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.winlator.widget.SeekBar
+                android:id="@+id/SBCursorSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:minValue="10"
+                app:maxValue="250"
+                app:suffix="%" />
+
+            <CheckBox
+                android:id="@+id/CBDisableMouseInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/disable_mouse_input" />
+
+            <Button
+                android:id="@+id/BTImportProfile"
+                style="@style/ButtonNeutral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/import_profile" />
 
             <Button
-                style="@style/ButtonNeutral"
                 android:id="@+id/BTExportProfile"
-                android:layout_width="0dp"
+                style="@style/ButtonNeutral"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/export_profile" />
         </LinearLayout>
-
-        <View style="@style/HorizontalLine" />
-
-        <Button
-            style="@style/ButtonPositive"
-            android:id="@+id/BTControlsEditor"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/controls_editor" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="@string/external_controllers"
-            android:textColor="?attr/colorPrimaryVariant"
-            android:layout_marginTop="8dp" />
-
-        <View style="@style/HorizontalLine" />
-
-        <LinearLayout
-            android:id="@+id/LLExternalControllers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <TextView
-            android:id="@+id/TVEmptyText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/no_items_to_display"
-            android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
