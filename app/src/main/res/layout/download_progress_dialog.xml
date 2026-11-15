@@ -1,74 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- NFS_DESIGN_V2 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
+    android:background="#0A0A0B"
     android:clickable="false"
     android:focusable="false">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="22dp"
-        android:paddingBottom="22dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
         android:layout_gravity="center"
-        android:gravity="right"
-        android:background="?attr/preloaderBackground">
+        android:background="@drawable/nfs_card_bg"
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingTop="16dp"
+        android:paddingRight="18dp"
+        android:paddingBottom="16dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp">
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/CircularProgressIndicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:trackThickness="10dp"
-                    app:trackColor="#bdbdbd"
-                    app:indicatorColor="?attr/colorAccent"
-                    app:indicatorSize="64dp"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:id="@+id/TVProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:layout_gravity="center" />
-            </FrameLayout>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/downloading_file"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TVProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="?attr/colorPrimaryText"
-                android:text="@string/downloading_file" />
+                android:layout_marginLeft="12dp"
+                android:text="0%"
+                android:textColor="#FFC107"
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/PBProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="12dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/nfs_progress_bar" />
+
+        <TextView
+            android:id="@+id/TVHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/nfs_install_hint"
+            android:textColor="#8A8A8F"
+            android:textSize="11sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/LLBottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical"
             android:visibility="gone">
 
-            <View style="@style/HorizontalLine" />
+            <View style="@style/NfsDivider" />
 
             <Button
-                style="@style/ButtonNeutral"
-                android:text="@string/cancel"
-                android:id="@+id/BTCancel" />
+                android:id="@+id/BTCancel"
+                style="@style/NfsButtonNeutral"
+                android:layout_width="wrap_content"
+                android:text="@string/cancel" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
