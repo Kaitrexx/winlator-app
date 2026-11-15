@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -54,6 +56,7 @@ public class InputControlsFragment extends Fragment {
     private Runnable updateLayout;
     private Callback<ControlsProfile> importProfileCallback;
     private final int selectedProfileId;
+    private Drawable savedToolbarBackground;
 
     public InputControlsFragment(int selectedProfileId) {
         this.selectedProfileId = selectedProfileId;
@@ -69,7 +72,24 @@ public class InputControlsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.input_controls);
+        // NFS_DESIGN_V2: başlıq və tünd yuxarı panel (ekrandan çıxanda köhnəsi qaytarılır)
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportActionBar().setTitle(R.string.nfs_controls_title);
+        Toolbar toolbar = activity.findViewById(R.id.Toolbar);
+        if (toolbar != null) {
+            savedToolbarBackground = toolbar.getBackground();
+            toolbar.setBackgroundColor(0xFF0F0F11);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Activity activity = getActivity();
+        if (activity != null && savedToolbarBackground != null) {
+            Toolbar toolbar = activity.findViewById(R.id.Toolbar);
+            if (toolbar != null) toolbar.setBackground(savedToolbarBackground);
+        }
     }
 
     @Override
