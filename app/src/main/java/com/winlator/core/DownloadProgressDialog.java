@@ -7,7 +7,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
+import android.widget.ProgressBar;
+
 import com.winlator.R;
 import com.winlator.math.Mathf;
 
@@ -51,7 +52,11 @@ public class DownloadProgressDialog {
         close();
         if (dialog == null) create();
 
+        // NFS_DESIGN_V2: sistem faylları quraşdırılanda Azərbaycanca başlıq və izah göstərilir
+        boolean isInstall = textResId == R.string.installing_system_files;
+        if (isInstall) textResId = R.string.nfs_install_title;
         if (textResId > 0) ((TextView)dialog.findViewById(R.id.TextView)).setText(textResId);
+        dialog.findViewById(R.id.TVHint).setVisibility(isInstall ? View.VISIBLE : View.GONE);
 
         setProgress(0);
         if (onCancelCallback != null) {
@@ -64,7 +69,7 @@ public class DownloadProgressDialog {
     public void setProgress(int progress) {
         if (dialog == null) return;
         progress = Mathf.clamp(progress, 0, 100);
-        ((CircularProgressIndicator)dialog.findViewById(R.id.CircularProgressIndicator)).setProgress(progress);
+        ((ProgressBar)dialog.findViewById(R.id.PBProgress)).setProgress(progress);
         ((TextView)dialog.findViewById(R.id.TVProgress)).setText(progress+"%");
     }
 
