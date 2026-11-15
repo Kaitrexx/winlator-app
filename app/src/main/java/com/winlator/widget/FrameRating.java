@@ -207,21 +207,28 @@ public class FrameRating extends FrameLayout implements Runnable {
     private void updateExtraInfo(short[] clockSpeeds) {
         if (extraView == null) return;
 
+        // NFS_HUD_V2: every line is kept short so it fits the width of the CPU line (the box width)
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(Locale.ENGLISH, "Frame max %.0f ms", shownMaxFrameMs));
 
         float batteryTemp = getBatteryTemp();
-        if (batteryTemp > 0) sb.append(String.format(Locale.ENGLISH, " | Batt %.1f\u00b0C", batteryTemp));
-
         int thermal = getThermalStatus();
-        if (thermal >= 0) {
-            sb.append("\nThermal: ").append(thermal < THERMAL_NAMES.length ? THERMAL_NAMES[thermal] : String.valueOf(thermal));
+        if (batteryTemp > 0 || thermal >= 0) {
+            sb.append("\n");
+            if (batteryTemp > 0) sb.append(String.format(Locale.ENGLISH, "%.1f\u00b0C", batteryTemp));
+            if (batteryTemp > 0 && thermal >= 0) sb.append(" | ");
+            if (thermal >= 0) {
+                sb.append("Thermal ").append(thermal < THERMAL_NAMES.length ? THERMAL_NAMES[thermal] : String.valueOf(thermal));
+            }
         }
 
         if (clockSpeeds != null && clockSpeeds.length > 0) {
-            sb.append("\nCores GHz:");
-            for (short clockSpeed : clockSpeeds) {
-                sb.append(String.format(Locale.ENGLISH, " %.1f", clockSpeed / 1000f));
+            for (int i = 0; i < clockSpeeds.length; i += 4) {
+                int last = Math.min(i + 4, clockSpeeds.length) - 1;
+                sb.append("\n[").append(i).append("-").append(last).append("]");
+                for (int j = i; j <= last; j++) {
+                    sb.append(String.format(Locale.ENGLISH, " %.1f", clockSpeeds[j] / 1000f));
+                }
             }
         }
         else {
