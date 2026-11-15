@@ -25,5 +25,8 @@
         <attr name="step" />
         <attr name="suffix" format="string" />
         <attr name="textSize" />
+        <attr name="nfsTrackColor" format="color" />
+        <attr name="nfsValueColor" format="color" />
+        <attr name="nfsThumbColor" format="color" />
     </declare-styleable>
 </resources>
