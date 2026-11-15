@@ -1,1 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NFS_DESIGN_V2: İdarəetmə ekranı (yan-yana) -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0A0B">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FFC107" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginRight="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/nfs_card_bg"
+                android:orientation="vertical"
+                android:paddingLeft="18dp"
+                android:paddingTop="10dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nfs_card_profile"
+                    android:textColor="#9A9A9A"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <Spinner
+                    android:id="@+id/SProfile"
+                    style="@style/ComboBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/nfs_field_bg"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <!-- Profil idarəsi (əlavə et/dəyiş/kopyala/sil) şəkildəki dizaynda yoxdur, gizlədilib. Lazım olsa gone -> visible -->
+                <LinearLayout
+                    style="@style/Toolbox"
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone">
+
+                    <ImageButton
+                        android:id="@+id/BTAddProfile"
+                        style="@style/ListMenuButton"
+                        android:src="@drawable/icon_add" />
+
+                    <ImageButton
+                        android:id="@+id/BTEditProfile"
+                        style="@style/ListMenuButton"
+                        android:src="@drawable/icon_edit" />
+
+                    <ImageButton
+                        android:id="@+id/BTDuplicateProfile"
+                        style="@style/ListMenuButton"
+                        android:src="@drawable/icon_duplicate" />
+
+                    <ImageButton
+                        android:id="@+id/BTRemoveProfile"
+                        style="@style/ListMenuButton"
+                        android:layout_marginRight="0dp"
+                        android:src="@drawable/icon_remove" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/nfs_card_bg"
+                android:orientation="vertical"
+                android:paddingLeft="18dp"
+                android:paddingTop="10dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nfs_card_opacity"
+                    android:textColor="#9A9A9A"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="12dp"
+                        android:text="@string/nfs_opacity_label"
+                        android:textColor="#C8C8CC"
+                        android:textSize="11sp" />
+
+                    <com.winlator.widget.SeekBar
+                        android:id="@+id/SBOverlayOpacity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:minValue="10"
+                        app:maxValue="100"
+                        app:step="5"
+                        app:suffix="%"
+                        app:textSize="12sp"
+                        app:nfsTrackColor="#2A2A2E"
+                        app:nfsValueColor="#FFC107"
+                        app:nfsThumbColor="#FFC107" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- Şəkildəki dizaynda olmayan ayarlar: kod onları tapa bilsin deyə qalır, amma gizlidir -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.winlator.widget.SeekBar
+                    android:id="@+id/SBCursorSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:minValue="10"
+                    app:maxValue="250"
+                    app:suffix="%" />
+
+                <CheckBox
+                    android:id="@+id/CBDisableMouseInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/disable_mouse_input" />
+
+                <Button
+                    android:id="@+id/BTImportProfile"
+                    style="@style/ButtonNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/import_profile" />
+
+                <Button
+                    android:id="@+id/BTExportProfile"
+                    style="@style/ButtonNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/export_profile" />
+            </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/nfs_card_bg"
+                android:orientation="vertical"
+                android:paddingLeft="18dp"
+                android:paddingTop="10dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nfs_card_editor"
+                    android:textColor="#9A9A9A"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/nfs_editor_desc"
+                    android:textColor="#9A9A9A"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/BTControlsEditor"
+                    style="@style/NfsButtonPositive"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/nfs_editor_open" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/nfs_card_bg"
+                android:orientation="vertical"
+                android:paddingLeft="18dp"
+                android:paddingTop="10dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nfs_card_gamepads"
+                    android:textColor="#9A9A9A"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <LinearLayout
+                    android:id="@+id/LLExternalControllers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/TVEmptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/nfs_no_gamepads"
+                    android:textColor="#C8C8CC"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
