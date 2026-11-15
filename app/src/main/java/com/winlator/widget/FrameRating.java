@@ -79,6 +79,7 @@ public class FrameRating extends FrameLayout implements Runnable {
                 extraView.setTextColor(ref.getTextColors());
                 extraView.setTextSize(TypedValue.COMPLEX_UNIT_PX, ref.getTextSize());
                 extraView.setTypeface(ref.getTypeface());
+                extraView.setHorizontallyScrolling(true); // NFS_HUD_V2: no wrapping, box grows to the longest line
                 extraView.setPadding(cpuPanel.getPaddingLeft(), 0, cpuPanel.getPaddingRight(), cpuPanel.getPaddingBottom());
                 extraView.setVisibility(GONE);
                 parent.addView(extraView);
@@ -214,7 +215,7 @@ public class FrameRating extends FrameLayout implements Runnable {
 
         int thermal = getThermalStatus();
         if (thermal >= 0) {
-            sb.append(" | Thermal ").append(thermal < THERMAL_NAMES.length ? THERMAL_NAMES[thermal] : String.valueOf(thermal));
+            sb.append("\nThermal: ").append(thermal < THERMAL_NAMES.length ? THERMAL_NAMES[thermal] : String.valueOf(thermal));
         }
 
         if (clockSpeeds != null && clockSpeeds.length > 0) {
@@ -222,6 +223,9 @@ public class FrameRating extends FrameLayout implements Runnable {
             for (short clockSpeed : clockSpeeds) {
                 sb.append(String.format(Locale.ENGLISH, " %.1f", clockSpeed / 1000f));
             }
+        }
+        else {
+            sb.append("\nCores: n/a");
         }
         extraView.setText(sb.toString());
     }
