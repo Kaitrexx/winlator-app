@@ -19,6 +19,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -102,11 +104,30 @@ public class NfsLauncherActivity extends AppCompatActivity {
         AppUtils.setActivityTheme(this);
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // NFS_UI_V1: yalnız landscape
+        applyImmersive();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         buildUI();
 
         if (!requestAppPermissions()) startInstallIfNeeded();
         handler.post(poller);
+    }
+
+    // NFS_UI_V2: status/naviqasiya zolağı gizlədilir, kamera çıxıntısı sahəsi də istifadə olunur
+    private void applyImmersive() {
+        if (Build.VERSION.SDK_INT >= 28) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+            View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) applyImmersive();
     }
 
     @Override
@@ -203,11 +224,14 @@ public class NfsLauncherActivity extends AppCompatActivity {
         banner.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
             if (r - l != or - ol || b - t != ob - ot) fitBanner(banner);
         });
-        root.addView(banner, new LinearLayout.LayoutParams(match, 0, 1f));
+        root.addView(banner, new LinearLayout.LayoutParams(match, 0, 58f));
+
+        LinearLayout lower = new LinearLayout(this);
+        lower.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(dp(32), dp(8), dp(32), 0);
+        row.setPadding(dp(36), dp(14), dp(36), 0);
 
         LinearLayout left = new LinearLayout(this);
         left.setOrientation(LinearLayout.VERTICAL);
@@ -247,24 +271,31 @@ public class NfsLauncherActivity extends AppCompatActivity {
         buttons.addView(settingsButton, settingsParams);
         left.addView(buttons, new LinearLayout.LayoutParams(wrap, wrap));
 
+        LinearLayout statusRow = new LinearLayout(this);
+        statusRow.setOrientation(LinearLayout.HORIZONTAL);
+        statusRow.setGravity(Gravity.CENTER_VERTICAL);
+        statusRow.setPadding(0, dp(6), 0, 0);
+
         statusView = new TextView(this);
         statusView.setTextSize(12);
         statusView.setTextColor(MUTED);
         statusView.setSingleLine(true);
         statusView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-        statusView.setPadding(0, dp(10), 0, 0);
-        statusView.setMaxWidth(dp(360));
-        left.addView(statusView, new LinearLayout.LayoutParams(wrap, wrap));
+        statusView.setMaxWidth(dp(250));
+        statusRow.addView(statusView, new LinearLayout.LayoutParams(wrap, wrap));
 
         pickButton = new TextView(this);
         pickButton.setText(R.string.nfs_pick_folder);
-        pickButton.setTextSize(14);
+        pickButton.setTextSize(13);
         pickButton.setTextColor(YELLOW);
         pickButton.setPaintFlags(pickButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        pickButton.setMinHeight(dp(44));
+        pickButton.setMinHeight(dp(36));
         pickButton.setGravity(Gravity.CENTER_VERTICAL);
         pickButton.setOnClickListener((v) -> pickFolder());
-        left.addView(pickButton, new LinearLayout.LayoutParams(wrap, wrap));
+        LinearLayout.LayoutParams pickParams = new LinearLayout.LayoutParams(wrap, wrap);
+        pickParams.leftMargin = dp(12);
+        statusRow.addView(pickButton, pickParams);
+        left.addView(statusRow, new LinearLayout.LayoutParams(wrap, wrap));
 
         row.addView(left, new LinearLayout.LayoutParams(wrap, wrap));
         row.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
@@ -290,11 +321,12 @@ public class NfsLauncherActivity extends AppCompatActivity {
         fpsParams.topMargin = dp(8);
         right.addView(chipFps, fpsParams);
         row.addView(right, new LinearLayout.LayoutParams(wrap, wrap));
-        root.addView(row, new LinearLayout.LayoutParams(match, wrap));
+        lower.addView(row, new LinearLayout.LayoutParams(match, wrap));
+        lower.addView(new View(this), new LinearLayout.LayoutParams(1, 0, 1f));
 
         LinearLayout bottom = new LinearLayout(this);
         bottom.setOrientation(LinearLayout.HORIZONTAL);
-        bottom.setPadding(dp(32), dp(4), dp(32), dp(10));
+        bottom.setPadding(dp(36), 0, dp(36), dp(8));
         TextView about = new TextView(this);
         about.setText(R.string.nfs_about);
         about.setTextSize(13);
@@ -311,7 +343,8 @@ public class NfsLauncherActivity extends AppCompatActivity {
         version.setTextColor(MUTED);
         version.setGravity(Gravity.CENTER_VERTICAL);
         bottom.addView(version, new LinearLayout.LayoutParams(wrap, dp(36)));
-        root.addView(bottom, new LinearLayout.LayoutParams(match, wrap));
+        lower.addView(bottom, new LinearLayout.LayoutParams(match, wrap));
+        root.addView(lower, new LinearLayout.LayoutParams(match, 0, 42f));
 
         setContentView(root);
     }
