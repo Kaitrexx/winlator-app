@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NFS_UI_V1: launcher mətnləri (ingilis dili üçün values-en/nfs_strings.xml əlavə olunacaq) -->
+    <string name="nfs_start">BAŞLAT</string>
+    <string name="nfs_settings">AYARLAR</string>
+    <string name="nfs_pick_folder">Qovluq seç</string>
+    <string name="nfs_about">Haqqında / Kreditlər</string>
+    <string name="nfs_about_text">Bu tətbiq Winlator layihəsi əsasında hazırlanıb və yalnız Need for Speed Most Wanted (2005) üçün nəzərdə tutulub.\n\nNeed for Speed Electronic Arts şirkətinin əmtəə nişanıdır. Oyun faylları tətbiqə daxil deyil, istifadəçi tərəfindən seçilir.</string>
+    <string name="nfs_close">Bağla</string>
+    <string name="nfs_unlimited">Limitsiz</string>
+    <string name="nfs_gpu_auto">Avtomatik</string>
+    <string name="nfs_chip_gpu">GPU: %s</string>
+    <string name="nfs_chip_cpu">CPU: %s</string>
+    <string name="nfs_chip_fps">FPS: %s</string>
+    <string name="nfs_status_installing">Sistem faylları quraşdırılır...</string>
+    <string name="nfs_status_pick">Oyun qovluğunu seçin (içində %s olmalıdır)</string>
+    <string name="nfs_status_folder">Qovluq: %s</string>
+    <string name="nfs_err_path">Qovluğun yolu müəyyən edilə bilmədi</string>
+    <string name="nfs_err_exe">%s bu qovluqda tapılmadı</string>
+    <string name="nfs_err_container">Container yaradıla bilmədi</string>
+</resources>
