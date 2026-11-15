@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NFS_SET_V1: ayarlar ekranı mətnləri (ingilis dili üçün values-en/nfs_settings_strings.xml əlavə olunacaq) -->
+    <string name="nfs_set_title">AYARLAR</string>
+    <string name="nfs_set_subtitle">NEED FOR SPEED · MOST WANTED</string>
+    <string name="nfs_set_back">Geri</string>
+    <string name="nfs_set_graphics">QRAFİKA</string>
+    <string name="nfs_set_aspect">Nisbət</string>
+    <string name="nfs_set_resolution">Çözünürlük</string>
+    <string name="nfs_set_fullscreen">Ekranı dart (tam ekran)</string>
+    <string name="nfs_set_gpu_title">GPU SÜRÜCÜSÜ</string>
+    <string name="nfs_set_gpu_driver">Qrafika sürücüsü</string>
+    <string name="nfs_set_perf">PERFORMANS</string>
+    <string name="nfs_set_cpu">CPU nüvələri</string>
+    <string name="nfs_set_fps">FPS limiti</string>
+    <string name="nfs_set_hud_title">GÖSTƏRİCİ</string>
+    <string name="nfs_set_hud">Oyun içi göstərici</string>
+    <string name="nfs_set_note">Dəyişikliklər növbəti BAŞLAT-da tətbiq olunur. 1280x960 və yuxarısı RAM-ı çox işlədir.</string>
+    <string name="nfs_set_save">YADDA SAXLA</string>
+    <string name="nfs_set_saved">Yadda saxlanıldı</string>
+    <string name="nfs_set_heavy"> (ağır)</string>
+    <string-array name="nfs_gpu_labels">
+        <item>Avtomatik</item>
+        <item>Turnip (yalnız Snapdragon/Adreno)</item>
+        <item>Vortek (Mali və digərləri)</item>
+    </string-array>
+    <string-array name="nfs_cpu_labels">
+        <item>6,7 (hazırkı)</item>
+        <item>4-7 (4 nüvə)</item>
+        <item>0-7 (hamısı)</item>
+    </string-array>
+    <string-array name="nfs_fps_labels">
+        <item>Limitsiz</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="nfs_hud_labels">
+        <item>Söndürülü</item>
+        <item>Sadə (yalnız FPS)</item>
+        <item>Tam (FPS, GPU, RAM, CPU)</item>
+    </string-array>
+</resources>
