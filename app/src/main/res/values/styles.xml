@@ -62,6 +62,8 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
     <style name="AppThemeFullscreenDark" parent="@style/AppThemeDark">
+        <item name="colorAccent">#FFC107</item>
+        <item name="colorPrimaryVariant">#FFC107</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -116,7 +118,7 @@
     <style name="ContentDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">?attr/popupMenuBackground</item>
+        <item name="android:windowBackground">@drawable/nfs_dialog_bg</item>
     </style>
     <style name="EditText">
         <item name="android:layout_width">match_parent</item>

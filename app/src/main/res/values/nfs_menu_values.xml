@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NFS_MENU_V3: oyun içi menyu (ingilis dili üçün values-en/nfs_menu_values.xml əlavə olunacaq) -->
+    <string name="nfs_menu_controls">İdarəetmə</string>
+    <string name="nfs_menu_fps">FPS göstəricisi</string>
+    <string name="nfs_menu_keyboard">Klaviatura</string>
+    <string name="nfs_menu_effect">Ekran effekti</string>
+    <string name="nfs_menu_logs">Loglar</string>
+    <string name="nfs_menu_exit">Çıx</string>
+    <string name="nfs_wait">Zəhmət olmasa gözləyin.</string>
+    <string name="nfs_badge_full">TAM</string>
+    <string name="nfs_badge_simple">SADƏ</string>
+    <string name="nfs_badge_off">BAĞLI</string>
+
+    <style name="NfsMenuText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NfsMenuTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="listPreferredItemHeightSmall">64dp</item>
+    </style>
+</resources>
