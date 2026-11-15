@@ -4,15 +4,31 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.PathShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.DocumentsContract;
+import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +36,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
@@ -53,9 +69,17 @@ public class NfsLauncherActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
+    private static final int YELLOW = 0xFFFFC107;
+    private static final int BG = 0xFF0B0B0D;
+    private static final int MUTED = 0xFF9A9A9A;
+
     private TextView statusView;
-    private AppCompatButton pickButton;
-    private AppCompatButton startButton;
+    private TextView pickButton;
+    private TextView startButton;
+    private TextView chipRes;
+    private TextView chipGpu;
+    private TextView chipCpu;
+    private TextView chipFps;
     private boolean installStarted = false;
     private boolean busy = false;
     private boolean destroyed = false;
@@ -77,11 +101,18 @@ public class NfsLauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         AppUtils.setActivityTheme(this);
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE); // NFS_UI_V1: yalnız landscape
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         buildUI();
 
         if (!requestAppPermissions()) startInstallIfNeeded();
         handler.post(poller);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (preferences != null && statusView != null) updateUI();
     }
 
     @Override
@@ -95,43 +126,212 @@ public class NfsLauncherActivity extends AppCompatActivity {
         return (int)(value * getResources().getDisplayMetrics().density);
     }
 
+    private TextView makeChip() {
+        TextView chip = new TextView(this);
+        chip.setTextSize(12);
+        chip.setTextColor(0xFFE6E6E6);
+        chip.setPadding(dp(10), dp(6), dp(10), dp(6));
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(0xFF17171A);
+        bg.setStroke(dp(1), 0xFF2A2A2E);
+        chip.setBackground(bg);
+        return chip;
+    }
+
+    private View makeStripe() {
+        int s = dp(16);
+        Bitmap bmp = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(BG);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(YELLOW);
+        Path band = new Path();
+        band.moveTo(0, s / 2f); band.lineTo(s / 2f, 0); band.lineTo(s, 0); band.lineTo(0, s); band.close();
+        canvas.drawPath(band, paint);
+        Path corner = new Path();
+        corner.moveTo(s, s / 2f); corner.lineTo(s, s); corner.lineTo(s / 2f, s); corner.close();
+        canvas.drawPath(corner, paint);
+        BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);
+        drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        View stripe = new View(this);
+        stripe.setBackground(drawable);
+        return stripe;
+    }
+
+    private void fitBanner(ImageView view) {
+        Drawable d = view.getDrawable();
+        if (d == null || view.getWidth() == 0 || view.getHeight() == 0) return;
+        float scale = Math.max(view.getWidth() / (float)d.getIntrinsicWidth(), view.getHeight() / (float)d.getIntrinsicHeight());
+        Matrix matrix = new Matrix();
+        matrix.setScale(scale, scale);
+        matrix.postTranslate((view.getWidth() - d.getIntrinsicWidth() * scale) / 2f, 0); // yuxarıdan hizala: yazı kəsilməsin
+        view.setImageMatrix(matrix);
+    }
+
+    private String versionName() {
+        try {
+            return "v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        }
+        catch (Exception e) {
+            return "";
+        }
+    }
+
+    private void showAbout() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.nfs_about)
+            .setMessage(R.string.nfs_about_text)
+            .setPositiveButton(R.string.nfs_close, null)
+            .show();
+    }
+
     private void buildUI() {
+        getWindow().setStatusBarColor(BG);
+        getWindow().setNavigationBarColor(BG);
+        final int match = ViewGroup.LayoutParams.MATCH_PARENT;
+        final int wrap = ViewGroup.LayoutParams.WRAP_CONTENT;
+
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setGravity(Gravity.CENTER);
-        root.setPadding(dp(24), dp(24), dp(24), dp(24));
+        root.setBackgroundColor(BG);
 
-        TextView title = new TextView(this);
-        title.setText("Need for Speed Most Wanted");
-        title.setTextSize(22);
-        title.setGravity(Gravity.CENTER);
-        root.addView(title, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(makeStripe(), new LinearLayout.LayoutParams(match, dp(8)));
+
+        final ImageView banner = new ImageView(this);
+        banner.setImageResource(R.drawable.nfs_banner);
+        banner.setScaleType(ImageView.ScaleType.MATRIX);
+        banner.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+            if (r - l != or - ol || b - t != ob - ot) fitBanner(banner);
+        });
+        root.addView(banner, new LinearLayout.LayoutParams(match, 0, 1f));
+
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setPadding(dp(32), dp(8), dp(32), 0);
+
+        LinearLayout left = new LinearLayout(this);
+        left.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout buttons = new LinearLayout(this);
+        buttons.setOrientation(LinearLayout.HORIZONTAL);
+
+        startButton = new TextView(this);
+        startButton.setText(R.string.nfs_start);
+        startButton.setTextSize(20);
+        startButton.setTypeface(Typeface.DEFAULT_BOLD);
+        startButton.setLetterSpacing(0.15f);
+        startButton.setTextColor(BG);
+        startButton.setGravity(Gravity.CENTER);
+        Path cut = new Path();
+        cut.moveTo(0, 0); cut.lineTo(100, 0); cut.lineTo(100, 70); cut.lineTo(95, 100); cut.lineTo(0, 100); cut.close();
+        ShapeDrawable startBg = new ShapeDrawable(new PathShape(cut, 100, 100));
+        startBg.getPaint().setColor(YELLOW);
+        startButton.setBackground(startBg);
+        startButton.setOnClickListener((v) -> startGame());
+        buttons.addView(startButton, new LinearLayout.LayoutParams(dp(190), dp(52)));
+
+        TextView settingsButton = new TextView(this);
+        settingsButton.setText(R.string.nfs_settings);
+        settingsButton.setTextSize(16);
+        settingsButton.setTypeface(Typeface.DEFAULT_BOLD);
+        settingsButton.setLetterSpacing(0.15f);
+        settingsButton.setTextColor(YELLOW);
+        settingsButton.setGravity(Gravity.CENTER);
+        GradientDrawable outline = new GradientDrawable();
+        outline.setColor(BG);
+        outline.setStroke(dp(2), YELLOW);
+        settingsButton.setBackground(outline);
+        settingsButton.setOnClickListener((v) -> startActivity(new Intent(this, NfsSettingsActivity.class)));
+        LinearLayout.LayoutParams settingsParams = new LinearLayout.LayoutParams(dp(150), dp(52));
+        settingsParams.leftMargin = dp(14);
+        buttons.addView(settingsButton, settingsParams);
+        left.addView(buttons, new LinearLayout.LayoutParams(wrap, wrap));
 
         statusView = new TextView(this);
-        statusView.setTextSize(15);
-        statusView.setGravity(Gravity.CENTER);
-        statusView.setPadding(0, dp(16), 0, dp(24));
-        root.addView(statusView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        statusView.setTextSize(12);
+        statusView.setTextColor(MUTED);
+        statusView.setSingleLine(true);
+        statusView.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+        statusView.setPadding(0, dp(10), 0, 0);
+        statusView.setMaxWidth(dp(360));
+        left.addView(statusView, new LinearLayout.LayoutParams(wrap, wrap));
 
-        pickButton = new AppCompatButton(this);
-        pickButton.setText("Qovluq seç");
+        pickButton = new TextView(this);
+        pickButton.setText(R.string.nfs_pick_folder);
+        pickButton.setTextSize(14);
+        pickButton.setTextColor(YELLOW);
+        pickButton.setPaintFlags(pickButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        pickButton.setMinHeight(dp(44));
+        pickButton.setGravity(Gravity.CENTER_VERTICAL);
         pickButton.setOnClickListener((v) -> pickFolder());
-        root.addView(pickButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        left.addView(pickButton, new LinearLayout.LayoutParams(wrap, wrap));
 
-        startButton = new AppCompatButton(this);
-        startButton.setText("Başlat");
-        startButton.setOnClickListener((v) -> startGame());
-        root.addView(startButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        row.addView(left, new LinearLayout.LayoutParams(wrap, wrap));
+        row.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
 
-        AppCompatButton advancedButton = new AppCompatButton(this);
-        advancedButton.setText("Əlavə ayarlar");
-        advancedButton.setAllCaps(false);
-        advancedButton.setOnClickListener((v) -> startActivity(new Intent(this, NfsSettingsActivity.class)));
-        LinearLayout.LayoutParams advancedParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        advancedParams.topMargin = dp(32);
-        root.addView(advancedButton, advancedParams);
+        LinearLayout right = new LinearLayout(this);
+        right.setOrientation(LinearLayout.VERTICAL);
+        right.setGravity(Gravity.END);
+
+        LinearLayout chips1 = new LinearLayout(this);
+        chips1.setOrientation(LinearLayout.HORIZONTAL);
+        chipRes = makeChip();
+        chipGpu = makeChip();
+        chipCpu = makeChip();
+        chipFps = makeChip();
+        TextView[] first = {chipRes, chipGpu, chipCpu};
+        for (TextView chip : first) {
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(wrap, wrap);
+            p.leftMargin = dp(8);
+            chips1.addView(chip, p);
+        }
+        right.addView(chips1, new LinearLayout.LayoutParams(wrap, wrap));
+        LinearLayout.LayoutParams fpsParams = new LinearLayout.LayoutParams(wrap, wrap);
+        fpsParams.topMargin = dp(8);
+        right.addView(chipFps, fpsParams);
+        row.addView(right, new LinearLayout.LayoutParams(wrap, wrap));
+        root.addView(row, new LinearLayout.LayoutParams(match, wrap));
+
+        LinearLayout bottom = new LinearLayout(this);
+        bottom.setOrientation(LinearLayout.HORIZONTAL);
+        bottom.setPadding(dp(32), dp(4), dp(32), dp(10));
+        TextView about = new TextView(this);
+        about.setText(R.string.nfs_about);
+        about.setTextSize(13);
+        about.setTextColor(MUTED);
+        about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        about.setMinHeight(dp(36));
+        about.setGravity(Gravity.CENTER_VERTICAL);
+        about.setOnClickListener((v) -> showAbout());
+        bottom.addView(about, new LinearLayout.LayoutParams(wrap, wrap));
+        bottom.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
+        TextView version = new TextView(this);
+        version.setText(versionName());
+        version.setTextSize(13);
+        version.setTextColor(MUTED);
+        version.setGravity(Gravity.CENTER_VERTICAL);
+        bottom.addView(version, new LinearLayout.LayoutParams(wrap, dp(36)));
+        root.addView(bottom, new LinearLayout.LayoutParams(match, wrap));
 
         setContentView(root);
+    }
+
+    private String formatCores(String list) {
+        java.util.ArrayList<Integer> cores = new java.util.ArrayList<>();
+        for (String part : list.split(",")) {
+            try { cores.add(Integer.parseInt(part.trim())); } catch (NumberFormatException e) {}
+        }
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < cores.size()) {
+            int j = i;
+            while (j + 1 < cores.size() && cores.get(j + 1) == cores.get(j) + 1) j++;
+            if (sb.length() > 0) sb.append(',');
+            if (j - i >= 2) sb.append(cores.get(i)).append('-').append(cores.get(j));
+            else for (int k = i; k <= j; k++) { if (k > i) sb.append(','); sb.append(cores.get(k)); }
+            i = j + 1;
+        }
+        return sb.toString();
     }
 
     private boolean requestAppPermissions() {
@@ -189,12 +389,22 @@ public class NfsLauncherActivity extends AppCompatActivity {
         boolean ready = isRootFsReady();
         String gameDir = getGameDir();
         String text;
-        if (!ready) text = "Sistem faylları quraşdırılır...";
-        else if (gameDir == null) text = "Oyun qovluğunu seçin\n(içində "+EXE_NAME+" olmalıdır)";
-        else text = "Qovluq:\n"+gameDir;
+        if (!ready) text = getString(R.string.nfs_status_installing);
+        else if (gameDir == null) text = getString(R.string.nfs_status_pick, EXE_NAME);
+        else text = getString(R.string.nfs_status_folder, gameDir);
         statusView.setText(text);
-        startButton.setEnabled(ready && gameDir != null && !busy);
+        boolean canStart = ready && gameDir != null && !busy;
+        startButton.setEnabled(canStart);
+        startButton.setAlpha(canStart ? 1f : 0.4f);
         pickButton.setEnabled(!busy);
+
+        String size = preferences.getString(NfsSettingsActivity.PREF_SCREEN_SIZE, NfsSettingsActivity.DEFAULT_SCREEN_SIZE);
+        chipRes.setText(size.replace('x', '\u00d7'));
+        String gpu = preferences.getString(NfsSettingsActivity.PREF_GPU_DRIVER, "auto");
+        chipGpu.setText(getString(R.string.nfs_chip_gpu, gpu.equals("turnip") ? "Turnip" : gpu.equals("vortek") ? "Vortek" : getString(R.string.nfs_gpu_auto)));
+        chipCpu.setText(getString(R.string.nfs_chip_cpu, formatCores(preferences.getString(NfsSettingsActivity.PREF_CPU_CORES, CPU_LIST))));
+        int fps = preferences.getInt(NfsSettingsActivity.PREF_FPS_LIMIT, 0);
+        chipFps.setText(getString(R.string.nfs_chip_fps, fps > 0 ? String.valueOf(fps) : getString(R.string.nfs_unlimited)));
     }
 
     private void pickFolder() {
@@ -209,11 +419,11 @@ public class NfsLauncherActivity extends AppCompatActivity {
 
         String path = treeUriToPath(data.getData());
         if (path == null || !new File(path).isDirectory()) {
-            Toast.makeText(this, "Qovluğun yolu müəyyən edilə bilmədi", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.nfs_err_path, Toast.LENGTH_LONG).show();
             return;
         }
         if (findExe(new File(path)) == null) {
-            Toast.makeText(this, EXE_NAME+" bu qovluqda tapılmadı", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.nfs_err_exe, EXE_NAME), Toast.LENGTH_LONG).show();
             return;
         }
         preferences.edit().putString(PREF_GAME_DIR, path).apply();
@@ -277,7 +487,7 @@ public class NfsLauncherActivity extends AppCompatActivity {
                 if (container == null) {
                     busy = false;
                     updateUI();
-                    Toast.makeText(this, "Container yaradıla bilmədi", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.nfs_err_container, Toast.LENGTH_LONG).show();
                 }
                 else {
                     applySettings(container);
