@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NFS_DESIGN_V2 -->
+    <string name="nfs_install_title">Sistem faylları quraşdırılır...</string>
+    <string name="nfs_install_hint">Bu yalnız ilk açılışda olur. Zəhmət olmasa gözləyin.</string>
+    <string name="nfs_controls_title">İDARƏETMƏ</string>
+    <string name="nfs_card_profile">PROFİL</string>
+    <string name="nfs_card_opacity">ŞƏFFAFLIQ</string>
+    <string name="nfs_opacity_label">Düymələrin şəffaflığı</string>
+    <string name="nfs_card_editor">DÜYMƏLƏRİN REDAKTORU</string>
+    <string name="nfs_editor_desc">Ekran düymələrinin yerini və ölçüsünü dəyiş.</string>
+    <string name="nfs_editor_open">REDAKTORU AÇ</string>
+    <string name="nfs_card_gamepads">XARİCİ PULTLAR</string>
+    <string name="nfs_no_gamepads">Qoşulmuş pult yoxdur</string>
+</resources>
