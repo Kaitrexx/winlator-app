@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NFS_DESIGN_V2: sol sarı xətli kart -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#151517" />
+        </shape>
+    </item>
+    <item android:gravity="left" android:width="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFC107" />
+        </shape>
+    </item>
+</layer-list>
