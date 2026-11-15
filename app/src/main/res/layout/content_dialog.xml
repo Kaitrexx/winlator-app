@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <LinearLayout
         android:id="@+id/LLTitleBar"
@@ -23,20 +23,22 @@
                 android:id="@+id/IVIcon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                app:tint="?attr/colorPrimaryVariant"
-                android:layout_marginRight="8dp"
+                app:tint="#FFC107"
+                android:layout_marginRight="10dp"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/TVTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/NfsDivider" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +52,7 @@
             android:id="@+id/IVMessageIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:tint="?attr/colorPrimaryVariant"
+            app:tint="#FFC107"
             android:layout_marginRight="16dp"
             android:visibility="gone" />
 
@@ -89,7 +91,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/NfsDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,7 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="#FFC107"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -115,18 +117,18 @@
                 android:visibility="gone" />
 
             <Button
-                style="@style/ButtonNeutral"
+                style="@style/NfsButtonNeutral"
                 android:id="@+id/BTReset"
                 android:text="@string/reset"
                 android:visibility="gone" />
 
             <Button
-                style="@style/ButtonNeutral"
+                style="@style/NfsButtonNeutral"
                 android:text="@string/cancel"
                 android:id="@+id/BTCancel" />
 
             <Button
-                style="@style/ButtonNeutral"
+                style="@style/NfsButtonPositive"
                 android:text="@string/ok"
                 android:id="@+id/BTConfirm" />
         </LinearLayout>

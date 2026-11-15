@@ -3,33 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="#CC0B0B0D"
     android:clickable="false"
     android:focusable="false">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="22dp"
-        android:paddingBottom="22dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:gravity="center_vertical"
         android:layout_gravity="center"
-        android:background="?attr/preloaderBackground">
-
-        <ProgressBar
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:indeterminate="true"
-            android:layout_marginRight="16dp"
-            android:indeterminateDrawable="?attr/progressBarIndeterminateImage" />
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/nfs_dialog_bg">
 
         <TextView
             android:id="@+id/TextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:textColor="?attr/colorPrimaryText" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFC107"
+            android:progressBackgroundTint="#2A2A2E" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nfs_wait"
+            android:textColor="#9A9A9A"
+            android:textSize="11sp" />
     </LinearLayout>
 </FrameLayout>

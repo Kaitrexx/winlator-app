@@ -22,7 +22,9 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginLeft="8dp"
-            app:tint="?attr/colorPrimary"
+            android:background="@drawable/nfs_icon_btn_bg"
+            android:padding="5dp"
+            app:tint="#FFC107"
             android:src="@drawable/icon_settings" />
     </LinearLayout>
 

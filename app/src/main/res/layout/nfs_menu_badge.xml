@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NFS_MENU_V4 -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/nfs_badge_bg"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:text="@string/nfs_badge_simple"
+    android:textColor="#FFC107"
+    android:textSize="10sp"
+    android:textStyle="bold"
+    android:letterSpacing="0.1" />

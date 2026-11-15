@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:background="@drawable/input_controls_toolbar"
+        android:background="@drawable/nfs_toolbar_bg"
         android:gravity="center_vertical"
         android:padding="4dp">
 
