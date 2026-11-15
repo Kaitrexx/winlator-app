@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- NFS_MENU_V2 -->
+<!-- NFS_MENU_V4 -->
 <menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
-        <item android:icon="@drawable/icon_input_controls" android:id="@+id/menu_item_input_controls" android:title="@string/input_controls" />
-        <item android:icon="@drawable/icon_task_manager" android:id="@+id/menu_item_fps" android:title="FPS göstəricisi" />
-        <item android:icon="@drawable/icon_keyboard" android:id="@+id/menu_item_keyboard" android:title="@string/keyboard" />
-        <item android:icon="@drawable/icon_screen_effect" android:id="@+id/menu_item_screen_effect" android:title="@string/screen_effect" />
-        <item android:icon="@drawable/icon_debug" android:id="@+id/menu_item_logs" android:title="@string/logs" />
-        <item android:icon="@drawable/icon_exit" android:id="@+id/menu_item_exit" android:title="@string/exit" />
+        <item android:icon="@drawable/icon_input_controls" android:id="@+id/menu_item_input_controls" android:title="@string/nfs_menu_controls" />
+        <item android:icon="@drawable/icon_task_manager" android:id="@+id/menu_item_fps" android:title="@string/nfs_menu_fps" app:actionLayout="@layout/nfs_menu_badge" />
+        <item android:icon="@drawable/icon_keyboard" android:id="@+id/menu_item_keyboard" android:title="@string/nfs_menu_keyboard" />
+        <item android:icon="@drawable/icon_screen_effect" android:id="@+id/menu_item_screen_effect" android:title="@string/nfs_menu_effect" />
+        <item android:icon="@drawable/icon_debug" android:id="@+id/menu_item_logs" android:title="@string/nfs_menu_logs" />
+        <item android:icon="@drawable/icon_exit" android:id="@+id/menu_item_exit" android:title="@string/nfs_menu_exit" />
     </group>
 </menu>
