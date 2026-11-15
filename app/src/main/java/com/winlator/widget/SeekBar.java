@@ -34,14 +34,14 @@ public class SeekBar extends AppCompatImageView {
     private float normalizedValue = 0;
     private OnValueChangeListener onValueChangeListener;
     private float textSize = UnitUtils.dpToPx(16);
-    private final int textColor = 0xff737373;
+    private int textColor = 0xff737373;
     private final float barHeight = UnitUtils.dpToPx(6);
     private final float thumbSize = UnitUtils.dpToPx(20);
     private final float thumbRadius;
     private final RectF rect = new RectF();
     private String suffix;
-    private final int colorPrimary = 0xffd7d7d7;
-    private final int colorSecondary;
+    private int colorPrimary = 0xffd7d7d7;
+    private int colorSecondary;
     private LinearGradient glossyEffectGradient;
 
     public interface OnValueChangeListener {
@@ -66,6 +66,10 @@ public class SeekBar extends AppCompatImageView {
             maxValue = ta.getFloat(R.styleable.SeekBar_maxValue, maxValue);
             suffix = ta.getString(R.styleable.SeekBar_suffix);
             textSize = ta.getDimension(R.styleable.SeekBar_textSize, textSize);
+            // NFS_DESIGN_V2: istəyə bağlı rənglər (verilməsə köhnə rənglər qalır)
+            colorPrimary = ta.getColor(R.styleable.SeekBar_nfsTrackColor, colorPrimary);
+            textColor = ta.getColor(R.styleable.SeekBar_nfsValueColor, textColor);
+            colorSecondary = ta.getColor(R.styleable.SeekBar_nfsThumbColor, colorSecondary);
 
             setStep(ta.getFloat(R.styleable.SeekBar_step, step));
             setValue(ta.getFloat(R.styleable.SeekBar_value, 0));
