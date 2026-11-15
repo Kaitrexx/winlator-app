@@ -161,6 +161,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         if (enableLogs) ProcessHelper.addDebugCallback(debugDialog = new DebugDialog(this));
         Menu menu = navigationView.getMenu();
         menu.findItem(R.id.menu_item_logs).setVisible(enableLogs);
+        // NFS_MENU_V4: Cix duymesi asagidaki ayrica duymedir, menyudaki setir gizlenir
+        menu.findItem(R.id.menu_item_exit).setVisible(false);
+        findViewById(R.id.BTNfsExit).setOnClickListener((exitView) -> exit());
         navigationView.setNavigationItemSelectedListener(this);
 
         rootFS = RootFS.find(this);
@@ -367,6 +370,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 break;
             case R.id.menu_item_fps:
                 if (frameRating != null) frameRating.setUserHidden(!frameRating.isUserHidden());
+                updateFpsBadge();
                 drawerLayout.closeDrawers();
                 break;
             case R.id.menu_item_screen_effect:
@@ -382,6 +386,19 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 break;
         }
         return true;
+    }
+
+    // NFS_MENU_V4: FPS setirinin yanindaki nisan (TAM / SADE / BAGLI)
+    private void updateFpsBadge() {
+        NavigationView nv = findViewById(R.id.NavigationView);
+        if (nv == null || frameRating == null) return;
+        MenuItem fpsItem = nv.getMenu().findItem(R.id.menu_item_fps);
+        View badge = fpsItem != null ? fpsItem.getActionView() : null;
+        if (badge instanceof android.widget.TextView) {
+            int res = frameRating.isUserHidden() ? R.string.nfs_badge_off
+                    : (frameRating.getMode() == FrameRating.Mode.FULL ? R.string.nfs_badge_full : R.string.nfs_badge_simple);
+            ((android.widget.TextView)badge).setText(res);
+        }
     }
 
     public SharedPreferences getPreferences() {
@@ -580,6 +597,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             frameRating.setUserHidden(!hudOn);
             frameRating.setVisibility(View.GONE);
             rootView.addView(frameRating);
+            updateFpsBadge();
         }
 
         if (shortcut != null) {
@@ -596,14 +614,15 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         android.widget.TextView btSettings = new android.widget.TextView(this);
         btSettings.setText("\u2699\uFE0E");
-        btSettings.setTextColor(0xffffffff);
+        btSettings.setTextColor(0xffffc107);
         btSettings.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 22);
         btSettings.setGravity(android.view.Gravity.CENTER);
         android.graphics.drawable.GradientDrawable btBackground = new android.graphics.drawable.GradientDrawable();
-        btBackground.setShape(android.graphics.drawable.GradientDrawable.OVAL);
-        btBackground.setColor(0x66000000);
+        btBackground.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        btBackground.setColor(0xCC0F0F11);
+        btBackground.setStroke(Math.max(1, (int)getResources().getDisplayMetrics().density), 0xffffc107);
         btSettings.setBackground(btBackground);
-        btSettings.setAlpha(0.45f);
+        btSettings.setAlpha(0.7f);
         float btDensity = getResources().getDisplayMetrics().density;
         int btSize = (int)(40 * btDensity);
         int btMargin = (int)(8 * btDensity);
